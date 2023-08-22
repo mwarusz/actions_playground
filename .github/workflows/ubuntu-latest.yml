@@ -29,15 +29,10 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
+        source ../machines/ubuntu.sh &&
         cd build &&
         ./cmakescript.sh &&
         cmake --build .
-      env:
-        CXX: mpic++
-        YAKL_CXX_FLAGS: "-DYAKL_PROFILE -DHAVE_MPI -O2 -I`nc-config --includedir`"
-        YAKL_F90_FLAGS: "-O2 -DSCREAM_DOUBLE_PRECISION -ffree-line-length-none"
-        PAM_LINK_FLAGS: "-L`nc-config --libdir` -lnetcdf"
-
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
