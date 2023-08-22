@@ -9,10 +9,6 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  CXX: mpic++
-  YAKL_CXX_FLAGS: "-DYAKL_PROFILE -DHAVE_MPI -O2 -I`nc-config --includedir`"
-  YAKL_F90_FLAGS: "-O2 -DSCREAM_DOUBLE_PRECISION -ffree-line-length-none"
-  PAM_LINK_FLAGS: "-L`nc-config --libdir` -lnetcdf"
 
 jobs:
   build:
@@ -36,6 +32,11 @@ jobs:
         cd build &&
         ./cmakescript.sh &&
         cmake --build .
+      env:
+        CXX: mpic++
+        YAKL_CXX_FLAGS: "-DYAKL_PROFILE -DHAVE_MPI -O2 -I`nc-config --includedir`"
+        YAKL_F90_FLAGS: "-O2 -DSCREAM_DOUBLE_PRECISION -ffree-line-length-none"
+        PAM_LINK_FLAGS: "-L`nc-config --libdir` -lnetcdf"
 
     - name: Test
       working-directory: ${{github.workspace}}/build
