@@ -28,17 +28,17 @@ jobs:
     - name: Install mpi
       run: sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev libnetcdf-dev
 
-    - name: Test mpi
-      run: OMPI_CXX=${{ matrix.compiler }} mpic++ -v
-
     - name: Configure and build
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
+        OMPI_CXX=${{ matrix.compiler }}
         source ./machines/ubuntu.sh &&
         cd build &&
         ./cmakescript.sh &&
         cmake --build .
+      env:
+        OMPI_CXX: ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }}
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
