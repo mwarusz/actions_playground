@@ -4,3 +4,6 @@ project(actions_playground LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(main.x src/main.cpp)
+
+enable_testing()
+add_subdirectory(test)
