@@ -9,6 +9,10 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  CXX: mpic++
+  YAKL_CXX_FLAGS: "-DYAKL_PROFILE -DHAVE_MPI -O2 -I`nc-config --includedir`"
+  YAKL_F90_FLAGS: "-O2 -DSCREAM_DOUBLE_PRECISION -ffree-line-length-none"
+  PAM_LINK_FLAGS: "-L`nc-config --libdir` -lnetcdf"
 
 jobs:
   build:
@@ -25,14 +29,13 @@ jobs:
     - name: Install mpi
       run: sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev
 
-    - name: Configure CMake
+    - name: Configure and build
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: CXX=mpic++ cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: |
+        cd build &&
+        ./cmakescript.sh &&
+        cmake --build .
 
     - name: Test
       working-directory: ${{github.workspace}}/build
