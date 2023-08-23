@@ -17,22 +17,23 @@ jobs:
         compiler: ["gcc", "clang"]
     runs-on: ${{matrix.os}}
 
-    - if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gcc'}}
-      env:
-        OMPI_CXX: 'g++'
-    - if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'clang'}}
-      env:
-        OMPI_CXX: 'clang++'
-    - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'clang'}}
-      env:
-        OMPI_CXX: 'clang++'
-        OMPI_FC: 'gfortran-12'
-    - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'gcc'}}
-      env:
-        OMPI_CXX: 'g++-12'
-        OMPI_FC: 'gfortran-12'
 
     steps:
+      - if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gcc'}}
+        env:
+          OMPI_CXX: 'g++'
+      - if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'clang'}}
+        env:
+          OMPI_CXX: 'clang++'
+      - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'clang'}}
+        env:
+          OMPI_CXX: 'clang++'
+          OMPI_FC: 'gfortran-12'
+      - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'gcc'}}
+        env:
+          OMPI_CXX: 'g++-12'
+          OMPI_FC: 'gfortran-12'
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
