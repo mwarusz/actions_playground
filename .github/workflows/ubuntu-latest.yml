@@ -44,33 +44,28 @@ jobs:
       - name: Install mpi
         run: brew install open-mpi netcdf
         if: ${{matrix.os == 'macos-12'}}
+      
+      - if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gcc'}}
+        name: Setup environment
+        run: source ./machines/ubuntu-gcc.sh
+      
+      - if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'clang'}}
+        name: Setup environment
+        run: source ./machines/ubuntu-clang.sh
+
+      - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'clang'}}
+        name: Setup environment
+        run: source ./machines/macos-clang.sh
+      
+      - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'gcc'}}
+        name: Setup environment
+        run: source ./machines/macos-gcc.sh
 
       - name: Configure and build
         run: |
-          source ./machines/ubuntu.sh &&
           cd build &&
           ./cmakescript.sh &&
           cmake --build .
-        env:
-          OMPI_CXX: 'g++'
-          OMPI_CC: 'gcc'
-          OMPI_FC: 'gfortran'
-          if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gcc'}}
-        env:
-          OMPI_CXX: 'clang++'
-          OMPI_CC: 'clang'
-          OMPI_FC: 'gfortran'
-          if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'clang'}}
-            #env:
-            #  OMPI_CXX: 'g++-12'
-            #  OMPI_CC: 'gcc-12'
-            #  OMPI_FC: 'gfortran-12'
-            #  if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'gcc'}}
-            #env:
-            #  OMPI_CXX: 'clang++'
-            #  OMPI_CC: 'clang'
-            #  OMPI_FC: 'gfortran-12'
-            #  if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'clang'}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
