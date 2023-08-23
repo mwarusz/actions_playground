@@ -1,0 +1,32 @@
+name: macos-gcc
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      
+      - name: Install mpi
+        run: brew install open-mpi netcdf
+
+      - name: Configure and build
+        run: |
+          source ./machines/macos-gcc.sh &&
+          cd build &&
+          ./cmakescript.sh &&
+          cmake --build .
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest
+
