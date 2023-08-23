@@ -17,7 +17,6 @@ jobs:
         compiler: ["gcc", "clang"]
     runs-on: ${{matrix.os}}
 
-
     steps:
       #- if: ${{ matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gcc'}}
       #  env:
@@ -38,9 +37,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install mpi
+      - if: ${{matrix.os == 'ubuntu-22.04'}}
+        name: Install mpi
         run: sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev libnetcdf-dev
-        if: ${{matrix.os == 'ubuntu-22.04'}}
       
       - name: Install mpi
         run: brew install open-mpi netcdf
