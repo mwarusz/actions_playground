@@ -26,7 +26,6 @@ jobs:
           cmake --build .
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        #working-directory: ${{github.workspace}}/build
         run: ctest
 
