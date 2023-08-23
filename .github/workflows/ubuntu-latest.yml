@@ -35,13 +35,13 @@ jobs:
         with:
           submodules: recursive
 
-      - if: ${{matrix.os == "ubuntu-22.04"}}
-        name: Install mpi
+      - name: Install mpi
         run: sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev libnetcdf-dev
+        if: ${{matrix.os == 'ubuntu-22.04'}}
       
-      - if: ${{matrix.os == "macos-12"}}
-        name: Install mpi
+      - name: Install mpi
         run: brew install open-mpi netcdf
+        if: ${{matrix.os == 'macos-12'}}
 
       - name: Configure and build
         run: |
