@@ -32,6 +32,11 @@ jobs:
       #  env:
       #    OMPI_CXX: 'g++-12'
       #    OMPI_FC: 'gfortran-12'
+      
+      - if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'gcc'}}
+        env:
+          OMPI_CXX: 'g++-12'
+          OMPI_FC: 'gfortran-12'
 
       - uses: actions/checkout@v3
         with:
@@ -51,10 +56,6 @@ jobs:
           cd build &&
           ./cmakescript.sh &&
           cmake --build .
-        env:
-          OMPI_CXX: 'g++-12'
-          OMPI_FC: 'gfortran-12'
-          if: ${{ matrix.os == 'macos-12' && matrix.compiler == 'gcc'}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
