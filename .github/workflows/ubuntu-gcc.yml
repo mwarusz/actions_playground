@@ -1,0 +1,32 @@
+name: ubuntu-gcc
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install mpi
+        run: sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev libnetcdf-dev
+
+      - name: Configure and build
+        run: |
+          source ./machines/ubuntu-gcc.sh &&
+          cd build &&
+          ./cmakescript.sh &&
+          cmake --build .
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest
+
